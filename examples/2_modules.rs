@@ -1,9 +1,8 @@
-extern crate waiter_di;
-extern crate config;
 extern crate serde;
+extern crate waiter_di;
 
-use waiter_di::*;
 use std::collections::HashMap;
+use waiter_di::*;
 
 // Simple demo of dependency inversion, constructors and modules
 
@@ -13,14 +12,16 @@ trait UserRepository {
 }
 
 struct HashMapUserRepository {
-    users: HashMap<i64, String>
+    users: HashMap<i64, String>,
 }
 
 #[component]
 impl HashMapUserRepository {
     #[provides]
     fn new() -> Self {
-        HashMapUserRepository { users: HashMap::new() }
+        HashMapUserRepository {
+            users: HashMap::new(),
+        }
     }
 }
 
@@ -37,16 +38,16 @@ impl UserRepository for HashMapUserRepository {
 
 #[module]
 struct UserModule {
-    repository: Box<dyn UserRepository>
+    repository: Box<dyn UserRepository>,
 }
 
 #[module]
 struct RootModule {
-    user_module: UserModule
+    user_module: UserModule,
 }
 
 fn main() {
-    let mut container = Container::<profiles::Dev>::new();
+    let mut container = Container::new();
 
     let mut user_repository = Provider::<dyn UserRepository>::create(&mut container);
 

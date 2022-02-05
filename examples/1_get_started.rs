@@ -1,8 +1,7 @@
-extern crate config;
 extern crate serde;
 extern crate waiter_di;
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 use waiter_di::*;
 
@@ -22,12 +21,11 @@ impl Interface for InterfaceImpl {
 
 #[component]
 struct SomeComp {
-    #[prop("i32_prop")] prop: i32,
-    interface: Rc<dyn Interface>
+    interface: Arc<dyn Interface>,
 }
 
 fn main() {
-    let mut container = Container::<profiles::Default>::new();
+    let mut container = Container::new();
 
     let component = Provider::<SomeComp>::get(&mut container);
 
